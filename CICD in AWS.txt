@@ -1,0 +1,286 @@
+CICD in AWS:
+	
+	AWS CodeCommit:
+	
+		->storing our code
+		->Version Control is done by Git
+		->these are private Git repositories
+		
+		->Search for codecommit in aws services
+		->create repository
+		->repository name:my-nodejs-app
+		->Description-optional:
+		->click create
+		->Click on add a file 
+		->upload a file
+		->commit changes to master
+			->Author name:premkamal
+			->email address:premkamal@gmail.commit
+			->commit message-optional:upload first commit.
+			->commit changes
+		
+		pull requests:
+			->create pull requests
+		 
+		 commits:we can what all the commits we have did
+		 
+		 branches:shows all the branches of out repository
+		 
+		 tags:
+		 
+		 settings:we can set notifications and triggers 
+		 
+			->Configure Notifications
+			->search for codecommit_lab
+			->create SNS topic
+			->Event types:check all the boxes
+			->click save
+			
+			->create triggers
+			->Trigger details:
+				->Trigger name:DummyTrigger
+				->Events:select all the events
+				->Branch names-optional:master
+			->Server details:
+				->Choose the service to use:Amazon SNS
+				->SNS topic
+				->Custom topic:
+				->save
+				
+			Go to IAM 
+			->Users
+			->Security Credentials
+			->Https Git credentials for AWS CodeCommit
+				->generate
+				->Download credentials
+				
+			Go back to codecommit and the repository you have created
+			->clone URL->clone https
+			->install git in your windows
+			->git --version
+			->copy the url fro the code commit
+			->in git type
+			->git clone url 
+			->enter username:
+			->enter password:
+			->now a new folder will be created with the name of your repository
+			->cd my-nodejs-app
+			->ls
+			->cp ../nodejs-v2-blue/*(file name you want to copy)
+			->git status
+			->git add .
+			->git status
+			->git commit -m "adding files"
+			->git push 
+			now you can check in your repository that your files have been commited in to the path 
+			
+			
+				
+		Authenticating in Git:
+		
+		Authorization in Git:
+		
+		Encryption:
+		
+		Cross Account Access:
+		
+		Code Commit Notifications:
+		
+			->SNS(simple Notification Service)
+			->AWS Lambda
+			->AWS CloudWatch Event Rules		
+		
+		
+	AWS CodePipeline:
+		automating our pipeline from code to ElasticBeanStalk
+	
+		->got to CodePipeline
+		->get started
+		->Create Pipeline
+		->Pipeline Settings
+			->Pipeline name:MyFirstPipeline
+			->service role:Create New servicerole
+			->role name:generated
+			->Advanced settings:
+				->Default location
+			->next
+			->add Source stage
+				->Service Provider:AWS CodeCommit
+				->Next
+			->Add Build Stagee
+				->Skip Build stage
+				->skip
+			->add Deploy Stagee
+				->Deploy provider:AWS Elastic Beanstalk
+				->Region:Mumbai
+				->application name:my-first-webapp-beanstalk
+				->Environment name:MyFirstWebappBeanstalk.env
+			->next
+			->review
+			->Create pipeline
+			
+			->go to Beanstalk and there we can see our pipeline which we havee upload will be show there 
+			
+			->got to Code Pipeline
+			->Edit the created pipeline
+			->Add ddeploy stage:DeployToProd
+				->add Action group
+					->Action name:ManualApproval
+					->Action provider:ManualApproval
+				->Done
+				
+				we can add another action gorup
+				->Add ddeploy stage:DeployToProd
+				->add Action group
+					->Action name:ManualApproval
+					->Action provider:ManualApproval
+					->application name:my-first-webapp-beanstalk
+					->Environment name:MyFirstWebappBeanstalk.env
+				->Done	
+			->save
+			
+			Do some changes in the color of your code by editing it and this will change the in your environment
+			
+				
+			
+		
+	AWS CodeBuild:(Pay for Use)
+		building and testing our code
+	
+		->Go to CodeBuild 
+		->Get Started
+		->create CodeBuild
+		->Project Configuration
+
+			->Project name:MyBuildProject
+			->Description-optional:Testing for ....
+			->Build badge-optional:
+			->Additional Configuration
+		->Source	
+		
+			->Source Provider:AWS CodeCommit
+			->Repository:my-nodejs-app
+		->Environment
+		
+			->Environment image:Managed image
+			->oprating system:ubuntu
+			->Runtime:standard
+			->image:aws/codebuild/latest verrsion
+			->privileged:
+			->servicerole:new service role
+			
+		->BuildSpec
+			
+			->Build Specification:Use a builspec file
+			->BuildSpec name-optional:
+		
+		->Artifacts
+		
+			->Type:
+			->Bucket name:
+			->name-optional:
+			
+		->Logs
+		
+			->Group name:
+			->Stream name:
+		
+		->Create build project
+		->start Build
+		this build has failed
+		for this we need to add YAML_FILE_ERROR.YAML file not exists
+		
+		->go to code commit
+		->create a file
+		->Commit changes to master	
+			copy the yaml file from the build.yaml
+			->File name:builspec.yaml
+			->Authos name:premkamal
+			->emailid:premkamal@gmail
+			->commit message-optional:add builspec.yaml at the root of directory
+			->commit changes
+			
+		Now go to Code Build 
+		->build project
+		->Configuration
+		->start new build
+		
+		->go to MyFirstPileline
+		->between source and deploying
+		->edit
+		->add stage
+		->stage name:BuildAndTest
+		->edit action	
+			->Action name:TestForConfiguration
+			->action provider:AWS CodeBuild
+			->Region:mumbai
+			->input artifacts:SourceArtifacts
+			->Projectname:MyBuildProject
+			->outputartifacts:output as testing
+			->Done
+			->save
+			
+		->Go to code commit and edit the test Congralations to horrible and commit the message-optional
+		->go to Code pipeline and see that ht echanges have been done
+		
+		now you will see a errror mesage to correct this change the horrible message to Congraluation and this will work
+			
+	AWS CodeDeploy:
+		deploying the code to EC2 fleets(not Beanstalk)
+		
+		->Go to IAM Role
+		->Create Role
+		->Code Deploy
+		->Attached premission policies:AWSCodeDeployRole
+		->next tags
+		->Review
+			->Role name:CodeDeployServiceRole
+			->Role Description:
+			->Create Role
+		
+		->Create another Role EC2
+		->next permissions
+			->S3ReadOnlyAccess
+		->next tags
+		->review
+			->Role name:EC2InstanceRoleForCodeDeploy
+			->Role Description:
+			->Create Role
+		
+		->CodeDeploy
+		->Getting started
+		->Create application
+		->Application name:MyDemoApplication
+		->Compute PlatForm:EC2/On-permises
+		->create application
+		
+		->go to services EC2
+		->Launch new instance 
+		and in configure instance details change IAM Role:EC2InstanceRoleForCodeDeploy ,
+		add tag ENvironment:Dev,
+		add Security Group Http and Launch
+		->ssh into our instance
+		->sudo yum update
+		->sudo yum install ruby
+		->wget https://aws-codedeploy-eu-west-3.s3.eu-west-3.amazonaws.com/latest/install
+		->chmod +x ./install
+		->sudo ./install automating
+		->sudo service codedeploy-agent status
+		
+		->go back to CodeDeploy
+		->create Deployment group
+		->enter Deployment group name:Developmentinstances
+		->servicerole:CodeDeployServiceRole
+		->Environment configure:Amazon EC2 instance(ENvironment:Dev)
+		
+		->now Create Deployment in CodeDeploy
+		->Select DeploymentGroup created 
+		->Go to S3 and add our applicationSampleApp_linux.zip
+		after upload copy the path and paste it in Revision Location
+		->create Deployment
+		
+		terminate the insstance created because it will cost you
+		
+	Continuous Integrety:
+	
+	Continuous Delivery:

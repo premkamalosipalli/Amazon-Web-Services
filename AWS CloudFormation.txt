@@ -1,0 +1,86 @@
+AWS CloudFormation:
+	(this lecture will cost you in Amazon practice)
+	
+	CloudFormation Create Stack:
+		
+		->Create a simple EC2 instance
+		->Create to add an Elastic IP to it
+		->Add two  securty groups to it
+		
+		->search for CloudFormation in aws service
+		->Change the region to US East (N.Viginla) because our templates wwill work there
+		->Click on create stack
+		->Select Upload a template to Amazon S3
+		->choose template from our code (O-just-ec2.yaml)
+		->Next
+		->Specify Details
+			->Stack Name:MyFirstCloudFormationTemplate
+			->next
+		->Opttions
+			->Leave them as default
+			->next
+		>Review and Click on cost to see how mmuch it cost for u
+		->then click on create
+		->then it will show the status of CREATE_IN_PROGRESS
+		->Check the instance which is createed in EC2 and check the tags
+		->View the template which is createe in the templates tab
+		
+	CloudFormation Update and Delete Stack:
+		
+		->trying to update the template with other template (1-ec2-with-sg-eip.yaml) which is available in our code folder
+		->Click on Actions 
+		->Update Stack
+		->->Select Upload a template to Amazon S3
+		->choose template from our code (1-ec2-with-sg-eip.yaml)
+		->Next
+		->Specify Details
+			->Stack Name:MyFirstCloudFormationTemplate
+			->Parameters
+				->SecurityGroupSection:This is a great Security group
+				->next
+		->Opttions
+			->Leave them as default
+			->next
+		>Review and Click on cost to see how mmuch it cost for u
+		->Review your changes will show what all the changes you are going to change
+		->then click on update
+		->In the events tab it will show what all the changes are going to happen 
+		->this is craeting new ec2 instance and elastic ip and this will delete the previously created ip
+		
+		->clcik on Delete in the Actions tab to delete the stack
+		
+	YAML Crash Course:
+		
+		->Consists of Key-Value Pairs
+		
+	
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		

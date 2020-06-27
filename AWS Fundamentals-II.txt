@@ -1,0 +1,113 @@
+AWS Fundamentals-II:
+
+	Load Balancers:
+		Create Second Instance with the pasting the code below in the text field of your configuration
+			#!/bin/bash
+			#install httpd(Linux 2 version)
+			yum update -y
+			yum install -y httpd.x86_64
+			systemctl start httpd.service
+			systemctl enable httpd.service
+			echo "Hello World from $(hostname -f)" > /var/www/html/index.html
+			
+			->select the previous created instance EC2Tutorial and existing key pair
+			->passte the public ip of the machine in the browser
+			
+			->Select Load Balancers in the left Menu
+			->create Load Balancer
+			->select Application Load Balancer
+			1.Configure Load Balancer
+				->Name the File
+				->Scheme 
+					Internet facling(public)
+					Internal(private)
+				->IP address type
+					ipv4
+				->listeners 
+					HTTP
+				->Availability Zones 
+					Select all the zones
+					
+			2.Configure Security Settings
+			
+			3.Configure Security Groups
+				->create new security groups
+					(name and description)
+					
+			4.Configure Routing
+				name
+				
+			5.Register Targets 
+				Select the instance by clicking the add to registered 
+				
+			6.Review
+			
+			7.Create
+			
+			Copy the DNS in the created load balancer and that show the message in the html file you have created 
+			
+			Open Security Group 
+				select inbound rules and then edit the http  and change the source to sg-....-created load balancer
+				by this we cannot access through IP but we can access by DNS name service .
+				
+	Auto Scaling Group:
+		
+		Go to Auto Scaling in the menu 
+			1.Create launch Configuration:
+			
+				->creat Auto Scaling group
+					->create or select a launch template
+					->create auto scaling group
+				1.Choose AMI
+					->Select Amazon Linux 2 AMI
+				2.Choose Instance Type
+					->t2.micro
+				3.Configure Details
+					->Name 
+					->advancaed details
+						->copy the content of apache installation in User Data
+						#!/bin/bash
+						#install httpd(Linux 2 version)
+						yum update -y
+						yum install -y httpd.x86_64
+						systemctl start httpd.service
+						systemctl enable httpd.service
+						echo "Hello World from $(hostname -f)" > /var/www/html/index.html
+				4.Add Storage
+				5.Configure security group
+					->choose existing security group(my-first-security-group)
+				6.Review
+				Click on create launch configuration
+				Choose an exiting Key-Pair
+				
+			2.Create Auto Scaling Group
+				1.Create Auto Scaling Group
+					->Group name,and select all the three subnets
+					->Advanced Details 
+						Check the box for Load Balancing
+						Select health check type as ELB
+						grace period is 60s
+				2.Configure Scaling policies
+					Select use scaling policies
+					scale btwn 1 and 3
+					Name -Scale Group Size
+					metric type-Average CPU Utilization
+					target value-40
+					instance-60
+				4.Notification
+				5.Tags
+				6.Review
+				Any error then fix them by pressing retry
+				
+				Run the DNS name in the browser then it will show the result from two name servers
+				
+				Now terminate the instance on which u have created before(my second instance) in the instances 
+				and go to auto scaling group and edit the number of instances to 2 in the Desired Capacity
+				See the new instance in actitvity history 
+				go to Instance in Scaling group and check whether it create a new instance and 
+				go to targets group in load balancing and check the status of the instance created 
+				now reload the DNS name and it will show you two IP for host name
+				and change the auto scaling desired value to 1 as default to avoid the billing.
+				
+	EBS Volume:	
+		to store the instances after termination

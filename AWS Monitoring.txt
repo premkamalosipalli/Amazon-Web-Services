@@ -1,0 +1,103 @@
+AWS Monitoring:
+	
+	AWS CloudWatch Metrics:
+	
+		->search for CloudWatch in AWS Services
+		
+		->Metrics
+		
+			->Select a Metric and you can view the data of that metric in a graph formate.
+			->You can add it to dashboard b clicking on the dashboard.
+			
+			->to see the deatiled monitoring of an instance then you can fallow this
+			->Go to EC2 instance 
+			->Auto Scaling Group
+			->Monitoring
+			->Enable Group Metric Colletion and it will show the Monitoring of that instance by going to the instance.
+			->Enable Detaild Monitoring which will cost u by going into the instance
+			
+		->Alarms
+		
+			->Alarms States:
+				OK
+				INSUFFICIENT_DATA
+				ALARM
+			->Period:
+				LENGTH
+				RESOLUTION
+				
+			->to see the deatiled monitoring of an instance then you can fallow this
+			->Go to EC2 instance 
+			->Auto Scaling Group
+			->Build Policies and there you can ee the state of the alarm
+			
+			->Click on Create Alarms
+				->Select Metric
+				->Define Alarm(Enter the detials in this field based on your requriments)
+				->Based on the threshold value we will get alarms
+				->Click on Create Alarm
+		
+		Logs:
+			
+			Logs Storage architecture:
+				Log group
+				Log Stream
+				
+			->Every time a Log will be create for aws  and it will build log strems
+			
+			->Enable Logs in the Elastic Bean which we have created before
+			and enable Instance log stremaing to cloudwatch logs in the logs tab
+			save it and then wait for the changes to take place
+			
+		Events:
+		
+			->Schedule
+			->Event Pattern
+			->Trigger to Lambda functions
+			
+			->Events
+			->Rule
+			->Create Rule
+				->Event Source
+					->Servicce Name:CodePipeline
+					->Event Type
+					->Specific state
+				->Targets
+					->Topic:AlarmTriggered
+					
+		
+				
+	AWS X-Ray:
+	
+		Visual Ananlysis of application
+		
+		->Search X-Ray
+		->Change the region Us East(N.Vergina)
+		->Getstarted
+		->step 1:Select sample or your application
+			Launch a simple application
+		->step 2:Select your prgramming language 
+			Node.js
+		->step 3:Implementation
+			Learn how to use the X-Ray SDk with other frameworks
+			
+		This will navigate to cloudformation 
+			->select template
+			->select details
+			->Options
+			->Review
+			
+		->Delete the stack after the process because it will cost you more than u except
+		
+		->go to outputs and copy the outputs value of the ip create and this iwll show u the applicationyou have create using X_RAY
+		
+		->Go to Service map in X-Ray to see the application map  and we can also see the traces 
+		
+	AWS CloudTrail:
+	
+		->Search for cloudtrail 
+		->show the events of the last days menctioned
+		->DashBoard
+		->EventHistory
+		->Trails
+	

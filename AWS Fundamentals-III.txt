@@ -1,0 +1,191 @@
+AWS Fundamentals-III:
+
+	Route 53:
+		Search route 53 in aws services
+		Select DNS Management
+		Select Create Hosted Zone
+			->Register a Domain by clicking on Registered Domains in the left menu
+			***This Will Cost Money***
+			->choose a Domain Name and check whether it is present already or not
+			->click on Add To Cart
+			->click Continue And enter the rrequried details and purchase the Domain.
+		Go to EC2-Select Load Balancer with DNS Name
+			->Go to Route 53 and now choose Create Record Set 
+			->Name:
+			->type-A-IPV4 address
+			->alias Target:Choose the application load balancer that we created before
+			->create
+		Then search with Address You Have created 
+		
+	RDS:(Relational DataBase Service)
+		Search rds in aws serices
+			->Go to DataBase Tab in the menu 
+			->Select Create DataBase
+				->choose Standard Create 
+				->Chose an Engine type 
+					Aurora is not compatable for the free tier
+					Mysql is compatable with the free tier
+				->choose Edition
+				->Choose Recent version
+				->Choose Templates with free tier
+				->Settings	
+					->Name :myfirstmysql(must not match with in your region)
+					->Master username
+					->Master password
+				->Choose DB instance size as t2.micro for free tier
+				->Storage autoscaling and disable it 
+				->Availability and duration(not avaliable in free tier)
+					this is only for production
+				->Connectivity 
+					->public accessible (yes)
+				->VPC Security Group 
+					->Create new
+						->Name:my-first-rds-sg
+					
+				->Additional Configuration
+					->initial database name:-mydb
+				Leave the remaininfg options as it isand click on create database
+				
+			To Work with the database we need to install a software in our laptop
+				->search sqlectron in browser 
+				->Click on Download GUI
+				->open github link at the top 
+				->select the operating system
+				->and install it on your computer
+				
+				->open sqlectron and clickon Add
+				->Name:My RDS Database
+				->Deference Type:Mysql
+				->server address:copy the end point from the aws rds you have created 
+				->enter the username and password of the database
+				->click on test and then click on save
+				->connect with Database and then you can see the created database in it
+		
+	ElastiCache:
+		Search ElastiCache in aws services
+			->click Get Started Now
+			->Choose a Cluster Engine and dont enable cluster mode for redis
+			->Name:myredis
+			->description:My First Redis Instance
+			->node type:cache.t2.micro
+			->Number of replicas:None
+			->Advanced Redis Settings
+				->Subnet Group:Create New
+				->Name:my-redis-subnet-group
+				->Description:My Redis Subnet Group
+				->Subnets:Choose any one
+				->uncheck Enable Automatic Backups
+			leave the remaining as default
+			
+AWS Fundamentals-Amazon S3:
+	->Search S3 in the aws services
+	->click on create bucket
+	1.Name and Region:
+		->Name:must be unique
+		->Region:choose the region closer to you
+		->Next
+	2.Configure Options:
+		->
+	3.Set Permissions:
+	4.Review
+	
+	->click on your bucket
+		->Click on Upload 
+		1.Select file
+		2.set perrmissions
+		3.set properties:
+		4.review
+		
+		->right click and open it
+		->dont try to open by the link it is showing 
+		
+	AWS S3 -Versioning:
+	
+		->go to properties of the bucket you have created
+		->click on versioning 
+		->select Enable Versioning 
+		->click Save
+		then you can see version hide and show in the overview tab of your bucket
+		->try to upload another file then you will see the version everytime it will generate a new versions
+	
+	AWS s3-Encryption:
+		
+		->upload a file in the S3 created 
+			In the premissions tab you can Encrypt your file
+				->Encryption:Select Amazon S3 master key
+		
+		->We can also encrypt by default by clickin on properties
+		->select encryption and click enable
+		
+	S3 Security:
+		
+		->disable default encryption in the properrties tab 
+		->Click on permissions
+			->click on Bucket Policy
+			->click on policy generator at the bottom
+				1.select type of policy:S3 Bucket policy
+				2.Add statements
+					->Effect:deny
+					->principle:*
+					->Action:PutObjects
+					->ARN:copy the arn from s3 bucket console under permissions->bucket policy ->ARN and add /* at the end
+				3.Add Conditions
+					->Condition:null
+					->key:amz-server-side-encryption
+					->value:true
+					click on add condition
+					
+				and repeat step 2 and now in step three
+				->condition:StringNotEquals
+				->key:amz-server-side-encryption
+				->value:true
+				click on add condition
+			Click on generate policy 
+			copy and paste in the json code in the bucket policy editor and click on save 
+			
+		->now upload a file with encryption permissions none then it will show an error because we have done encryption
+		->now upload a file with encryption permissions:aws server encryption
+		then it wont show an error
+		
+		AWS s3 Websites:
+			->create an index.html file in your local computer with showing some text and an image 
+			->remove the perrmissionsu have createe in the bucket policy and delete it
+			->Click upload and add the index.html file 
+			if we open that file it wont display the image
+			->go to properties 
+			->select static website hosting
+				->use this bucket to host a website
+					->index document:index.html
+					->click on save
+					copy the end point generated and passte it in the browser then it will show an error
+			->go to permissions
+			->public access settings and edit it
+			***after completion of the task keep the access to default****
+			->Manage public bucket policies for this bucket and unckeck the two boxes below
+			->click on save 
+			->click on conform
+			->click on policy generator at the bottom
+				1.select type of policy:S3 Bucket policy
+				2.Add statements
+					->Effect:allow
+					->principle:*
+					->AWS service:Amazon s3
+					->Action:GetObjects
+					->ARN:copy the arn from s3 bucket console under permissions->bucket policy ->ARN and add /* at the end
+				3.Add Conditions
+					->Condition:null
+					->key:amz-server-side-encryption
+					->value:true
+					click on add condition
+					Click on generate policy 
+					copy and paste in the json code in the bucket policy editor and click on save 
+					then we will see an warning that this bucket is public access
+			
+		AWS S3 CORS:
+			Cross Origion Resource Sharing 
+			
+		AWS S3-Consistency Model:
+		
+		AWS S3 Performance:
+		
+		S3 and Glacier Select:
