@@ -1,0 +1,129 @@
+AWS Elastic Beanstalk:
+	
+	Deploying an app on Beanstalk:
+		->Delete all the load balancers,auto scaling groups,EC2 Instances 
+		->search Beanstalk in aws service console
+		->click on get started
+			->Application name:my-first-webapp-beanstalk
+			->platform:node.js
+			->Application code:Sample application
+			->click on cnfigure more options(which will be discussed later
+			->For now just click on create application
+			->this will create a new S3 bucket
+			->after that there will a green tick showing that your application is healthy
+			->Click on Events to see what has happened in the back ground
+			
+			Elastic Beanstalk
+				->Environments
+					->Select Actions tab at the right corner which will show the details of our application
+					->select create new environment
+					->select environment tier
+					
+						->select we server environment
+							->Environment name:MyFirstWebappBeanstalk.production
+							->Domain:myappinprodbypremkamal and check avaliablity
+							->Description:this is my production environment
+							->platform:node.js
+							->Application code:simple application
+							->choose Configure more options at the bottom
+								->Configuration presets:Low Cost(free) and remaining all will cost us more
+								->proxy server:Nginx
+								->Node.js version:6.14.3
+								->Node command:Default
+								->Relate logs:Default
+								->Log streaming:Default
+								->Retention:Default
+								->Lifecycle:Default
+								->click on save
+								
+							->click on create environment
+				->Application versions
+				->Saved Configurations
+				
+			Elastic Beanstalk Deployment Modes:
+			
+				->go to my-first-webapp-beanstalk
+				->Click Configuration
+				->Select rolling updates and deployments
+					->Deployment policy:Rolling
+					->Batch Size:30(%)
+								1(fixed)
+					->Rolling update type:
+					->Batch Size:
+					->Minimum Capacity:
+					->Pause time:
+					->Ignore Health Checks:
+					->Healthy threshold:
+					->Command timeout:
+					->click Apply
+					->wait for the think to get updated and see the application 
+					
+					
+			Elastic Beanstalk CLI:
+				
+				->Basic commands are:
+					->ed create
+					->ed status
+					->ed health
+					->ed events
+					->ed logs
+					->ed open
+					->ed deploy
+					->ed config
+					->ed terminate
+					
+			
+			
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	
+	
+	
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+			
+			
+		

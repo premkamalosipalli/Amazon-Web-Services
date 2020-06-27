@@ -1,0 +1,164 @@
+AWS CLI,SDK,IAM Roles and Policies:
+	
+	
+	AWS CLI Setup:
+		->In browser Search install the aws cli on windows
+		->select the first link :docs.aws.amazon.com/*
+		->Select the MSI Installer
+		->Download the .msi file and run it
+		->Open Cmd
+		->type aws --version
+		if the aws is installed then it will show the version.
+		
+	AWS CLI Configuration:
+		Serach IAM in AWS services 
+		->go to users
+		->security credentials
+		->Create an accress key 
+		->*Download the .csv file(keep them secret dont share with anyone)
+		
+		->open cmd
+		->type aws configure
+		->copy the access key generated and paste it
+		->copy the secret access key and paste it in cmd
+		->default region :ap-south-1
+		->default output formate:(leave it as empty)
+		->Configuration is done
+		->type aws configure 
+		this will create some folders in ~/.aws 
+		to view them type aws configure windows
+		ls ~/.aws (or) cd .aws
+		cat ~/.aws/config (or) type config
+		cat ~/.aws/credentials (or) type credentials
+		delete the access keys in the security credentials 
+		
+		AWS CLI practice with S3:
+		
+			->search aws S3 CLI in google
+			you can see all the list of commands there and practice them in cmd
+			->aws s3 ls(to see the buckets avaliable in s3)
+			->aws s3 ls s3://bucketname(to see the content of the bucket)
+			->aws s3 cp help (cp means copy command)
+			->q to exit 
+			->aws s3 cp s3://bucketname/filename filename.jpg (to copy the file to local system from s3)
+			->aws s3 mb s3://bucketname (to make a bucket)
+			->aws s3 rb s3://bucketname (to remove a empty bucket)
+			
+		AWS CLI ON EC2:
+		
+			NEVER SHARE PERSONAL CREDENTIALS ON AN EC2.
+			->open EC2 in aws services
+			->open IAM in other tab
+			
+			->ssh in to ec2 from your local computer 
+				ssh -i EC2Tutorial.pem ec2-users@IP
+				->type aws --version ( this is installed by default in ec2)
+				->aws configure
+				->aws access key :(keep it empty)
+				->aws secret accesskey:(kep it empty)
+				->region name:ap-south-1
+				->output format:(keep it empty)
+				->type aws s3 ls
+				then it will show error
+				we can solve this error by attaching iam role for ec2
+				
+				->go to IAM
+				->roles
+				->select EC2
+				->create role then search for s3 and select AmazonS3ReadOnlyAccess
+				->click Next
+				->File name:MyFirstEC2Role
+				->next
+				
+				->go to ec2 
+				->right click on the instance 
+				->instance settings
+				->attach/replace iam role
+				->select MyFirstEC2Role
+				->click Apply
+				now it will work to access the s3 bucket
+				but if we try to create a new bucket by using mb this will show an error
+				becaue ec2 role is not able to create an bucket
+				->to solve this we must provide AmazonS3FullAccess policy
+				
+				IAM Roles and Policies:
+				->open IAM 
+				->open Roles
+				->attach policies or detach policies
+				->create policy 
+				->add inline policy 
+				by this we can add this to particular policy
+				->you cann use policy summary or JSON to see what our policy will do 
+				
+				if we want to create a policy
+				->create policy
+				->choose a service (Amazon s3)
+				->access level
+				->read 
+				->getobjects
+				->resources:specific or add ARN and enter the bucket name and object aneem(*)
+				->revire policy
+				->Name:MyTestS3Policy
+				->create policy
+				
+				->aws policy generator 
+				and you can specify the need and it will generate JSON for you
+				
+				-> search aws policy simulator in google 
+				and click the link given to access the policies and review your simulation 
+				
+		AWS CLI Dry Run:
+				create an new Ec2 instance using IAM role by CLI
+				->ssh your ec2 and then go to your ec2 meachine and run the commands below
+				->aws ec2 run-instances
+				->aws ec2 run-instances --dry-run --image-id AMIID(copythis amiid from the ec2 instance created) --instance-type t2.micro 
+				we will get error (to check authorisations )
+				->to solve this error go to IAM appatch policy MtTestS3CustomPolicy  
+				->Attach Policy
+				
+				->go to policies
+				->search for policy MtTestS3CustomPolicy  and try to edit it
+				->add service ec2 
+				->select write ->select runinstances and check the box
+				->resources:all
+				->review
+				->create
+				->aws ec2 run-instances --dry-run --image-id AMIID(copythis amiid from the ec2 instance created) --instance-type t2.micro 
+				then it will show a dry run flag (since it is allowed)
+				
+		AWS CLI STS Decode :
+			
+				->IAM
+				->policies
+				->google:aws sts decode-authorization-message
+				->add other service for MtTestS3CustomPolicy
+				->Service:STS
+				->access level->write->decodeauthorisationmessage
+				->review policy
+				
+				->aws sts decode-authorization-message --encode-message message(copy the message that is generated above error)
+
+				->echo message(copy the message)
+				->then it will show json formate and vieew this in json file which will show the error message clearly
+				
+		AWS EC2 Instance Metadata:
+			
+				->http://169.254.169.254/latest/meta-data/(only work throught ec2 instance)
+				
+				->ssh your ec2 instance
+				->curl http://169.254.169.254
+				->curl http://169.254.169.254/latest/
+				->curl http://169.254.169.254/latest/meta-data/
+				->curl http://169.254.169.254/latest/meta-data/instance-id
+				->curl http://169.254.169.254/latest/meta-data/iam/info
+				->curl http://169.254.169.254/latest/meta-data/iam/security-credentials/
+				->curl http://169.254.169.254/latest/meta-data/iam/security-credentials/Rolename
+				by this we can simply access the iam role credentials temporarly from the ec2 metadata
+				
+		
+		AWS SDK :
+
+		AWS CLI profices:
+			->aws configure --profile my-other-aws-account
+			->now there will new crendials and we can switch between two diffreent accounts
+			->aws s3 ls --profile my-other-aws-account
